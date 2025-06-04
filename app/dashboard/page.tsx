@@ -10,6 +10,7 @@ import {
   Calendar,
   ChevronDown,
   FileText,
+  FileSpreadsheet,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -99,6 +100,10 @@ export default function DashboardPage() {
                   <Link href="/reports" className="flex items-center gap-2" onClick={() => setIsSheetOpen(false)}>
                     <FileText className="h-5 w-5" />
                     <span>Reports</span>
+                  </Link>
+                  <Link href="/csv-data" className="flex items-center gap-2" onClick={() => setIsSheetOpen(false)}>
+                    <FileSpreadsheet className="h-5 w-5" />
+                    <span>CSV Data</span>
                   </Link>
                   <Link href="/settings" className="flex items-center gap-2" onClick={() => setIsSheetOpen(false)}>
                     <Settings className="h-5 w-5" />
@@ -190,6 +195,13 @@ export default function DashboardPage() {
             >
               <FileText className="h-4 w-4" />
               Reports
+            </Link>
+            <Link
+              href="/csv-data"
+              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground"
+            >
+              <FileSpreadsheet className="h-4 w-4" />
+              CSV Data
             </Link>
             <Separator className="my-2" />
             <Link
