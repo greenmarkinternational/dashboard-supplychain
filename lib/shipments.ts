@@ -110,3 +110,33 @@ export async function updateShipmentStatus(
     }
   }
 }
+
+export async function addShipment(shipmentData: any): Promise<{ success: boolean; message: string; shipment?: any }> {
+  try {
+    const response = await fetch("/api/shipments/add", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(shipmentData),
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+      throw new Error(data.error || "Failed to create shipment")
+    }
+
+    return {
+      success: true,
+      message: data.message,
+      shipment: data.shipment,
+    }
+  } catch (error) {
+    console.error("Error adding shipment:", error)
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Unknown error occurred",
+    }
+  }
+}

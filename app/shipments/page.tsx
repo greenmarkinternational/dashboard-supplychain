@@ -76,9 +76,11 @@ export default function ShipmentsPage() {
             <Download className="mr-2 h-4 w-4" />
             Export
           </Button>
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            New Shipment
+          <Button asChild>
+            <Link href="/shipments/new">
+              <Plus className="mr-2 h-4 w-4" />
+              New Shipment
+            </Link>
           </Button>
         </div>
       </div>
@@ -128,9 +130,11 @@ export default function ShipmentsPage() {
                 {searchQuery ? "Try adjusting your search query" : "Create your first shipment to get started"}
               </p>
               {!searchQuery && (
-                <Button className="mt-4">
-                  <Plus className="mr-2 h-4 w-4" />
-                  New Shipment
+                <Button className="mt-4" asChild>
+                  <Link href="/shipments/new">
+                    <Plus className="mr-2 h-4 w-4" />
+                    New Shipment
+                  </Link>
                 </Button>
               )}
             </div>

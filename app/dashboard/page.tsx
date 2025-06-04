@@ -14,6 +14,7 @@ import {
   LogOut,
   Menu,
   Package,
+  Plus,
   Search,
   Settings,
   Ship,
@@ -211,6 +212,12 @@ export default function DashboardPage() {
           <div className="flex items-center">
             <h1 className="text-lg font-semibold md:text-2xl">Dashboard</h1>
             <div className="ml-auto flex items-center gap-2">
+              <Button variant="outline" size="sm" asChild>
+                <Link href="/shipments/new">
+                  <Plus className="mr-2 h-4 w-4" />
+                  New Shipment
+                </Link>
+              </Button>
               <Select defaultValue="today">
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select timeframe" />
@@ -259,9 +266,11 @@ export default function DashboardPage() {
                 <TabsTrigger value="ports">Port Status</TabsTrigger>
               </TabsList>
               <div className="ml-auto">
-                <Button variant="outline" size="sm">
-                  <ArrowUpRight className="mr-2 h-4 w-4" />
-                  View All
+                <Button variant="outline" size="sm" asChild>
+                  <Link href="/shipments">
+                    <ArrowUpRight className="mr-2 h-4 w-4" />
+                    View All
+                  </Link>
                 </Button>
               </div>
             </div>
