@@ -10,7 +10,13 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "CSV URL is required" }, { status: 400 })
     }
 
-    // For security, you might want to validate the URL or restrict to certain domains
+    // Validate URL to ensure it's a safe source
+    try {
+      new URL(url) // This will throw if URL is invalid
+    } catch {
+      return NextResponse.json({ error: "Invalid URL provided" }, { status: 400 })
+    }
+
     const csvData = await fetchCSVData(url)
 
     return NextResponse.json({

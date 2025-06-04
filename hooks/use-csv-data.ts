@@ -15,11 +15,14 @@ export function useCSVData<T>({ url, refreshInterval = null }: UseCSVDataOptions
   async function fetchData() {
     try {
       setIsLoading(true)
+      setError(null)
+
       const encodedUrl = encodeURIComponent(url)
       const response = await fetch(`/api/csv-data?url=${encodedUrl}`)
 
       if (!response.ok) {
-        throw new Error(`Failed to fetch CSV data: ${response.statusText}`)
+        const errorData = await response.json()
+        throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`)
       }
 
       const result = await response.json()
@@ -28,8 +31,7 @@ export function useCSVData<T>({ url, refreshInterval = null }: UseCSVDataOptions
         throw new Error(result.error)
       }
 
-      setData(result.data)
-      setError(null)
+      setData(result.data || [])
     } catch (err) {
       setError(err instanceof Error ? err : new Error("An unknown error occurred"))
       console.error(`Error fetching CSV data:`, err)
@@ -39,12 +41,14 @@ export function useCSVData<T>({ url, refreshInterval = null }: UseCSVDataOptions
   }
 
   useEffect(() => {
-    fetchData()
+    if (url) {
+      fetchData()
 
-    // Set up polling if refreshInterval is provided
-    if (refreshInterval) {
-      const intervalId = setInterval(fetchData, refreshInterval)
-      return () => clearInterval(intervalId)
+      // Set up polling if refreshInterval is provided
+      if (refreshInterval && refreshInterval > 0) {
+        const intervalId = setInterval(fetchData, refreshInterval)
+        return () => clearInterval(intervalId)
+      }
     }
   }, [url, refreshInterval])
 

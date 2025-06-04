@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Search } from "lucide-react"
+import { Search, RefreshCw } from "lucide-react"
 
 interface CSVDataTableProps {
   url: string
@@ -36,12 +36,14 @@ export function CSVDataTable({ url, title, description }: CSVDataTableProps) {
   if (isLoading) {
     return (
       <div className="w-full space-y-3">
+        <div className="flex items-center justify-between">
+          <Skeleton className="h-10 w-64" />
+          <Skeleton className="h-10 w-20" />
+        </div>
         {Array(5)
           .fill(0)
           .map((_, i) => (
-            <div key={i} className="flex items-center space-x-4">
-              <Skeleton className="h-12 w-full" />
-            </div>
+            <Skeleton key={i} className="h-12 w-full" />
           ))}
       </div>
     )
@@ -53,6 +55,7 @@ export function CSVDataTable({ url, title, description }: CSVDataTableProps) {
         <h2 className="text-xl font-semibold text-red-800">Error Loading Data</h2>
         <p className="mt-2 text-red-600">{error.message}</p>
         <Button variant="outline" className="mt-4" onClick={() => refetch()}>
+          <RefreshCw className="mr-2 h-4 w-4" />
           Try Again
         </Button>
       </div>
@@ -61,8 +64,12 @@ export function CSVDataTable({ url, title, description }: CSVDataTableProps) {
 
   if (!data || data.length === 0) {
     return (
-      <div className="flex justify-center p-6 text-muted-foreground">
-        <p>No data found</p>
+      <div className="flex flex-col items-center justify-center p-8 text-center">
+        <p className="text-muted-foreground">No data found</p>
+        <Button variant="outline" className="mt-4" onClick={() => refetch()}>
+          <RefreshCw className="mr-2 h-4 w-4" />
+          Refresh
+        </Button>
       </div>
     )
   }
@@ -81,6 +88,7 @@ export function CSVDataTable({ url, title, description }: CSVDataTableProps) {
           />
         </div>
         <Button variant="outline" onClick={() => refetch()}>
+          <RefreshCw className="mr-2 h-4 w-4" />
           Refresh
         </Button>
       </div>
@@ -90,24 +98,35 @@ export function CSVDataTable({ url, title, description }: CSVDataTableProps) {
           <TableHeader>
             <TableRow>
               {columns.map((column) => (
-                <TableHead key={column}>{column}</TableHead>
+                <TableHead key={column} className="font-medium">
+                  {column}
+                </TableHead>
               ))}
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredData.map((row, rowIndex) => (
-              <TableRow key={rowIndex}>
-                {columns.map((column) => (
-                  <TableCell key={`${rowIndex}-${column}`}>{row[column]}</TableCell>
-                ))}
+            {filteredData.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="text-center text-muted-foreground">
+                  {searchQuery ? "No results found for your search" : "No data available"}
+                </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              filteredData.map((row, rowIndex) => (
+                <TableRow key={rowIndex}>
+                  {columns.map((column) => (
+                    <TableCell key={`${rowIndex}-${column}`}>{row[column] || "-"}</TableCell>
+                  ))}
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </div>
 
       <div className="text-sm text-muted-foreground">
         Showing {filteredData.length} of {data.length} entries
+        {searchQuery && ` (filtered by "${searchQuery}")`}
       </div>
     </div>
   )
